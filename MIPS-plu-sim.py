@@ -32,17 +32,17 @@ def main():
         mem = hex(4096*2 + i*4)
         memory.append([mem, 0, 0, 0, 0])
         g = g + 1
-        print(memory[i]) if (g == 8) else print(memory[i], end=" ")
+        ##print(memory[i]) if (g == 8) else print(memory[i], end=" ")
         if g == 8:
             g = 0
     # uncomenting this gives you a space to raed the out put more claerly
-    print()
+    ##print()
 
     # this block creates ann array for all the registers and at the same time it allocates space for lo hi and pc
     reg = [0]
     for i in range(27):  # lo == index 24 hi == index 25  PC == index 26
         reg.append(0)
-        print('r', i, reg[i]) if (i < 24) else print('r', i, reg[i], 'hi, lo or pc')
+        ##print('r', i, reg[i]) if (i < 24) else print('r', i, reg[i], 'hi, lo or pc')
 
     # this will make accessing lo, hi, pc easy to remember
     lo = 24  # reg[lo]
@@ -50,13 +50,21 @@ def main():
     pc = 26  # reg[pc]
 
     location = 0
-    for line in asm:
+    j = 0
+    line = asm[0]
+    line = ''.join(str(e) for e in line)
+    while location < len(asm):
+        if j == 8:
+            location = 10
+            line = asm[location]
+            line = ''.join(str(e) for e in line)
+        
         location += 1
         line = line.replace("\n", "")  # Removes extra chars
         line = line.replace("$", "")
         line = line.replace(" ", "")
         line = line.replace("zero", "0")  # assembly can also use both $zero and $0
-
+        print(j, line)
         if (line[0:3] == "beq"):  # BEQ
             line = line.replace("beq", "")
             line = line.split(",")
@@ -206,7 +214,10 @@ def main():
                 for i in range(len(labelName)):
                     if (labelName[i] == line[0]):
                         f.write(str('000010') + str(format(int(labelIndex[i]), '026b')) + '\n')
-
+        if location != len(asm):
+            line = asm[location]
+            line = ''.join(str(e) for e in line)
+        j += 1
 
     f.close()
 
