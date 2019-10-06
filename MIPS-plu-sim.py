@@ -27,10 +27,11 @@ def main():
 
     # this block of code allocates all the memory for address ranging from 0x2000 - 0x3000 if you uncomment the commented area and run it you will see
     memory = []
+
     g = 0
     for i in range(1025):
-        mem = hex(4096*2 + i*4)
-        memory.append([mem, 0, 0, 0, 0])
+        mem =hex(4096 *2 + i*4)
+        memory.append([mem, hex(00), hex(00), hex(00), hex(00)])
         g = g + 1
         ##print(memory[i]) if (g == 8) else print(memory[i], end=" ")
         if g == 8:
@@ -42,10 +43,10 @@ def main():
     reg = [0]
     for i in range(27):  # lo == index 24 hi == index 25  PC == index 26
         reg.append(0)
-        ##print('r', i, reg[i]) if (i < 24) else print('r', i, reg[i], 'hi, lo or pc')
+        print('r', i, reg[i]) if (i < 24) else print('hi, lo or pc',i, reg[i])
 
     # this will make accessing lo, hi, pc easy to remember
-    lo = 24  # reg[lo]
+    lo = 24  # reg[lo]    reg[8] reg[pc] reg[23]
     hi = 25  # reg[hi]
     pc = 26  # reg[pc]
 
@@ -54,17 +55,17 @@ def main():
     line = asm[0]
     line = ''.join(str(e) for e in line)
     while location < len(asm):
-        if j == 8:
-            location = 10
-            line = asm[location]
-            line = ''.join(str(e) for e in line)
+        ##if j == 8:
+          ##  location = 10
+            ##line = asm[location]
+            ##line = ''.join(str(e) for e in line)
         
         location += 1
         line = line.replace("\n", "")  # Removes extra chars
         line = line.replace("$", "")
         line = line.replace(" ", "")
         line = line.replace("zero", "0")  # assembly can also use both $zero and $0
-        print(j, line)
+        #print(j, line)
         if (line[0:3] == "beq"):  # BEQ
             line = line.replace("beq", "")
             line = line.split(",")
@@ -72,7 +73,7 @@ def main():
                 if (labelName[i] == line[2]):
                     labellocation = labelIndex[i]
 
-            ofset = labellocation - location + 1
+            ofset = labellocation - location
             imm = format(ofset, '016b') if (ofset > 0) else format(65536 + ofset, '016b')
             rt = format(int(line[1]), '05b')
             rs = format(int(line[0]), '05b')
