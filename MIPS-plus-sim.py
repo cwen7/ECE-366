@@ -143,10 +143,11 @@ def main():
             rd = int(line[0], 10)
             rs = int(line[1], 10)
             rt = int(line[2], 10)
-            reg[rs] = int(reg[rs], 16)
-            reg[rt] = int(reg[rt], 16)
+            rs = int(reg[rs], 16)
+            rt = int(reg[rt], 16)
+            print(reg[rs])
             if rd != 0:
-                reg[rd] = format(reg[rs] & reg[rt], '08x')
+                reg[rd] = format(rs & rt, '08x')
             print(reg[rd])
 
         if (line[0:3] == "add"):  #ADD
@@ -156,31 +157,41 @@ def main():
 
             print('andi not ready')
 
-        if (line[0:3] == "beq"):  # BEQ
+        if line[0:3] == "beq":  # BEQ
             line = line.replace("beq", "")
             line = line.split(",")
             for i in range(len(labelName)):
-                if (labelName[i] == line[2]):
+                if labelName[i] == line[2]:
                     labellocation = labelIndex[i]
 
-            ofset = labellocation - location + 1
-            imm = format(ofset, '016b') if (ofset > 0) else format(65536 + ofset, '016b')
-            rt = format(int(line[1]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('000100') + str(rs) + str(rt) + str(imm) + '\n')
+            offset = labellocation - location + 1
+            rt = int(line[1])
+            rs = int(line[0])
+            rs = int(reg[rs], 16)
+            rt = int(reg[rt], 16)
+            if rs == rt:
+                location = offset
+                line = asm[location]
+                line = ''.join(str(e) for e in line)
 
-        if (line[0:3] == "bne"):  # BNE
-            line = line.replace("bne", "")
+
+
+        if line[0:3] == "bne":  # BNE
+            line = line.replace("beq", "")
             line = line.split(",")
             for i in range(len(labelName)):
-                if (labelName[i] == line[2]):
+                if labelName[i] == line[2]:
                     labellocation = labelIndex[i]
 
-            ofset = labellocation - location + 1
-            imm = format(ofset, '016b') if (ofset > 0) else format(65536 + ofset, '016b')
-            rt = format(int(line[1]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('000101') + str(rs) + str(rt) + str(imm) + '\n')
+            offset = labellocation - location + 1
+            rt = int(line[1])
+            rs = int(line[0])
+            rs = int(reg[rs], 16)
+            rt = int(reg[rt], 16)
+            if rs != rt:
+                location = offset
+                line = asm[location]
+                line = ''.join(str(e) for e in line)
 
         if (line[0:4] == "sltu"):  # SLTU
             line = line.replace("sltu", "")
@@ -265,7 +276,6 @@ def main():
         if location != len(asm):
             line = asm[location]
             line = ''.join(str(e) for e in line)
-        j += 1
 
     f.close()
 

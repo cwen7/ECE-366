@@ -1,4 +1,5 @@
-addi $8, $0, 2000
+beq $0,$8, loop
 lui $8, 0xFA19
 ori $8, $8, 0xE366
 and $15, $14, $12
+loop:addi $8, $0, 2000
