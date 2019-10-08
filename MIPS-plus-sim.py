@@ -31,18 +31,18 @@ def main():
     g = 0
     for i in range(1025):
         mem =hex(4096 *2 + i*4)
-        memory.append([mem, hex(00), hex(00), hex(00), hex(00)])
+        memory.append(['00', '00', '00', '00', mem])
         g = g + 1
-        print(memory[i]) if (g == 8) else print(memory[i], end=" ")
+        ##print(memory[i]) if (g == 8) else print(memory[i], end=" ")
         if g == 8:
             g = 0
     # uncomenting this gives you a space to raed the out put more claerly
-    print()
+    ##print()
 
     # this block creates ann array for all the registers and at the same time it allocates space for lo hi and pc
-    reg = [0]
+    reg = []
     for i in range(27):  # lo == index 24 hi == index 25  PC == index 26
-        reg.append(0)
+        reg.append('00000000')
         print('r', i, reg[i]) if (i < 24) else print('hi, lo or pc',i, reg[i])
 
     # this will make accessing lo, hi, pc easy to remember
@@ -74,35 +74,87 @@ def main():
 
 
 
-
         if (line[0:4] == "addi"):  # ADDI
             line = line.replace("addi", "")
             line = line.split(",")
 
             if line[2][0:2] == "0x" or line[2][0:3] == "-0x":
                 line[2] = line[2].replace("0x", "")
-                imm = int(line[2], 16) if (int(line[2]) > 0) else int(line[2], 16)
+                imm = int(line[2], 16)
             else:
                 imm = int(line[2], 10)
-
             rs = int(line[1])
             rt = int(line[0])
+            reg[rs] = int(reg[rs], 16)
+
+            if reg[rs] > 2**31 - 1:
+                reg[rs] = reg[rs] - 2**32
+
+
             reg[rt] = reg[rs] + imm
+
+            if reg[rt] < 0:
+                reg[rt] = reg[rt] + 2**32
+            if rt != 0:
+                print(reg[rt])
+                reg[rt] = format(reg[rt], '08x')
+            print(reg[rt])
+
         if (line[0:3] == "lui"):  # LUI
+            line = line.replace("lui", "")
+            line = line.split(",")
+            if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
+                line[1] = line[1].replace("0x", "")
+                imm = int(line[1], 16)
+            else:
+                imm = int(line[1], 10)
+            rt = int(line[0])
+            if rt != 0:
+                reg[rt] = format(imm*(16**4), '08x')
+            print(reg[rt])
 
         if (line[0:3] == "ori"):  #ORI
+            line = line.replace("ori", "")
+            line = line.split(",")
 
-        if (line[0:4] == "mfhi"): #MFHI
-
-        if (line[0:4] == "mflo"):  # MFHI
+            if line[2][0:2] == "0x" or line[2][0:3] == "-0x":
+                line[2] = line[2].replace("0x", "")
+                imm = int(line[2], 16)
+            else:
+                imm = int(line[2], 10)
+            rs = int(line[1])
+            rt = int(line[0])
+            reg[rs] = int(reg[rs], 16)
+            if reg[rs] > 2**31:
+                reg[rs] = reg[rs] - 2**32
+            if rt != 0:
+                reg[rt] = reg[rs] ^ imm
+            if reg[rt] < 0:
+                reg[rt] = reg[rt] + 2**32
+            reg[rt] = format(reg[rt], '08x')
+            print(reg[rt])
 
         if (line[0:3] == "xor"):   # XOR
+            print(' xor not ready')
 
         if (line[0:3] == "and"):    #AND
+            line = line.replace("and", "")
+            line = line.split(",")
+            rd = int(line[0], 10)
+            rs = int(line[1], 10)
+            rt = int(line[2], 10)
+            reg[rs] = int(reg[rs], 16)
+            reg[rt] = int(reg[rt], 16)
+            if rd != 0:
+                reg[rd] = format(reg[rs] & reg[rt], '08x')
+            print(reg[rd])
 
         if (line[0:3] == "add"):  #ADD
+            print('add not ready')
 
-        if (line[0:4] == "andi")  #ANDI
+        if (line[0:4] == "andi"):  #ANDI
+
+            print('andi not ready')
 
         if (line[0:3] == "beq"):  # BEQ
             line = line.replace("beq", "")
@@ -140,7 +192,7 @@ def main():
 
 
         if (line[0:2] == "sh"): #SH
-            line = line.replace("sw", "")
+            line = line.replace("sh", "")
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
