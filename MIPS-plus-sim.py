@@ -85,13 +85,12 @@ def main():
                 imm = int(line[2], 10)
             rs = int(line[1])
             rt = int(line[0])
-            reg[rs] = int(reg[rs], 16)
+            rs = int(reg[rs], 16)
 
-            if reg[rs] > 2**31 - 1:
-                reg[rs] = reg[rs] - 2**32
+            if rs > 2**31 - 1:
+                rs = reg[rs] - 2**32
 
-
-            reg[rt] = reg[rs] + imm
+            reg[rt] = rs + imm
 
             if reg[rt] < 0:
                 reg[rt] = reg[rt] + 2**32
