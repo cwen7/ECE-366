@@ -88,6 +88,21 @@ def main():
             rs = int(line[1])
             rt = int(line[0])
             reg[rt] = reg[rs] + imm
+        if (line[0:3] == "lui"):  # LUI
+
+        if (line[0:3] == "ori"):  #ORI
+
+        if (line[0:4] == "mfhi"): #MFHI
+
+        if (line[0:4] == "mflo"):  # MFHI
+
+        if (line[0:3] == "xor"):   # XOR
+
+        if (line[0:3] == "and"):    #AND
+
+        if (line[0:3] == "add"):  #ADD
+
+        if (line[0:4] == "andi")  #ANDI
 
         if (line[0:3] == "beq"):  # BEQ
             line = line.replace("beq", "")
@@ -123,15 +138,8 @@ def main():
             rs = format(int(line[0]), '05b')
             f.write(str('000000') + str(rs) + str(rt) + str(rd) + str('00000101011') + '\n')
 
-        if (line[0:3] == "slt"):  # SLT
-            line = line.replace("slt", "")
-            line = line.split(",")
-            rd = format(int(line[2]), '05b')
-            rt = format(int(line[1]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('000000') + str(rs) + str(rt) + str(rd) + str('00000101010') + '\n')
 
-        if (line[0:2] == "sw"):  # SW
+        if (line[0:2] == "sh"): #SH
             line = line.replace("sw", "")
             line = line.replace("(", ",")
             line = line.replace(")", "")
@@ -143,8 +151,8 @@ def main():
             f.write(str('101011') + str(rs) + str(rt) + str(imm) + '\n')
 
 
-        if (line[0:2] == "lw"):  # LW
-            line = line.replace("lw", "")
+        if (line[0:3] == "lbu"):  # LW
+            line = line.replace("lbu", "")
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
@@ -191,20 +199,6 @@ def main():
             rt = format(int(line[0]), '05b')
             f.write(str('000000') + str(rs) + str(rt) + str('0000000000011001') + '\n')
 
-        if (line[0:4] == "mult"):  # MULT
-            line = line.replace("mult", "")
-            line = line.split(",")
-            rs = format(int(line[1]), '05b')
-            rt = format(int(line[0]), '05b')
-            f.write(str('000000') + str(rs) + str(rt) + str('0000000000011000') + '\n')
-
-        if (line[0:5] == "addiu"):  # ADDIU
-            line = line.replace("addiu", "")
-            line = line.split(",")
-            imm = format(int(line[2]), '016b')
-            rs = format(int(line[1]), '05b')
-            rt = format(int(line[0]), '05b')
-            f.write(str('001001') + str(rs) + str(rt) + str(imm) + '\n')
 
         if (line[0:4] == "addi"):  # ADDI
             line = line.replace("addi", "")
@@ -214,30 +208,6 @@ def main():
             rt = format(int(line[0]), '05b')
             f.write(str('001000') + str(rs) + str(rt) + str(imm) + '\n')
 
-        elif (line[0:3] == "add"):  # ADD
-            line = line.replace("add", "")
-            line = line.split(",")
-            rd = format(int(line[0]), '05b')
-            rs = format(int(line[1]), '05b')
-            rt = format(int(line[2]), '05b')
-            f.write(str('000000') + str(rs) + str(rt) + str(rd) + str('00000100000') + '\n')
-
-        elif (line[0:1] == "j"):  # JUMP
-            line = line.replace("j", "")
-            line = line.split(",")
-
-            # Since jump instruction has 2 options:
-            # 1) jump to a label
-            # 2) jump to a target (integer)
-            # We need to save the label destination and its target location
-
-            if (line[0].isdigit()):  # First,test to see if it's a label or a integer
-                f.write(str('000010') + str(format(int(line[0]), '026b')) + '\n')
-
-            else:  # Jumping to label
-                for i in range(len(labelName)):
-                    if (labelName[i] == line[0]):
-                        f.write(str('000010') + str(format(int(labelIndex[i]), '026b')) + '\n')
 
 
 
