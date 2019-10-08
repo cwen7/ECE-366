@@ -89,12 +89,11 @@ def main():
 
             if rs > 2**31 - 1:
                 rs = reg[rs] - 2**32
+
             if rt != 0:
                 reg[rt] = rs + imm
-
-            if reg[rt] < 0:
-                reg[rt] = reg[rt] + 2**32
-            if rt != 0:
+                if reg[rt] < 0:
+                    reg[rt] = reg[rt] + 2**32
                 print(reg[rt])
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
@@ -124,13 +123,15 @@ def main():
             rs = int(line[1])
             rt = int(line[0])
             rs = int(reg[rs], 16)
+
             if rs > 2**31 - 1:
                 rs = rs - 2**32
+
             if rt != 0:
                 reg[rt] = rs ^ imm
-            if reg[rt] < 0:
-                reg[rt] = reg[rt] + 2**32
-            reg[rt] = format(reg[rt], '08x')
+                if reg[rt] < 0:
+                    reg[rt] = reg[rt] + 2**32
+                reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
 
         if (line[0:3] == "xor"):   # XOR
