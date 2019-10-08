@@ -123,11 +123,11 @@ def main():
                 imm = int(line[2], 10)
             rs = int(line[1])
             rt = int(line[0])
-            reg[rs] = int(reg[rs], 16)
-            if reg[rs] > 2**31:
-                reg[rs] = reg[rs] - 2**32
+            rs = int(reg[rs], 16)
+            if rs > 2**31:
+                rs = rs - 2**32
             if rt != 0:
-                reg[rt] = reg[rs] ^ imm
+                reg[rt] = rs ^ imm
             if reg[rt] < 0:
                 reg[rt] = reg[rt] + 2**32
             reg[rt] = format(reg[rt], '08x')
@@ -250,14 +250,6 @@ def main():
             rt = format(int(line[0]), '05b')
             f.write(str('000000') + str(rs) + str(rt) + str('0000000000011001') + '\n')
 
-
-        if (line[0:4] == "addi"):  # ADDI
-            line = line.replace("addi", "")
-            line = line.split(",")
-            imm = format(int(line[2]), '016b') if (int(line[2]) > 0) else format(65536 + int(line[2]), '016b')
-            rs = format(int(line[1]), '05b')
-            rt = format(int(line[0]), '05b')
-            f.write(str('001000') + str(rs) + str(rt) + str(imm) + '\n')
 
 
 
