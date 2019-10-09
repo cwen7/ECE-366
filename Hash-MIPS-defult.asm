@@ -5,7 +5,7 @@ ori $16, $16, 0x2000
 ori $17, $17, 0x2020
 ori $19, $19, 1
 ori $20, $20, 101
-ori $23, $23, 0x1Ffa
+ori $23, $23, 0x1F
 
 loop:multu $9, $8
 mfhi $11

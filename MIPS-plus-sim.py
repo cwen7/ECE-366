@@ -43,7 +43,7 @@ def main():
     reg = []
     for i in range(27):  # lo == index 24 hi == index 25  PC == index 26
         reg.append('00000000')
-        print('r', i, reg[i]) if (i < 24) else print('hi, lo or pc',i, reg[i])
+        ##print('r', i, reg[i]) if (i < 24) else print('hi, lo or pc',i, reg[i])
 
     # this will make accessing lo, hi, pc easy to remember
     lo = 24  # reg[lo]    reg[8] reg[pc] reg[23]
@@ -54,6 +54,7 @@ def main():
     j = 0
     line = asm[0]
     line = ''.join(str(e) for e in line)
+
     while location < len(asm):
         ##if j == 8:
           ##  location = 10
@@ -88,7 +89,7 @@ def main():
             rs = int(reg[rs], 16)
 
             if rs > 2**31 - 1:
-                rs = reg[rs] - 2**32
+                rs = rs - 2**32
 
             if rt != 0:
                 reg[rt] = rs + imm
@@ -97,6 +98,22 @@ def main():
                 print(reg[rt])
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
+
+        if (line[0:3] == "add"):  # ADD
+            if (line[0:3] == "add"):  # ADD
+                line = line.replace("add", "")
+                line = line.split(",")
+                rd = int(line[0], 10)
+                rs = int(line[1], 10)
+                rt = int(line[2], 10)
+                rs = int(reg[rs], 16)
+                rt = int(reg[rt], 16)
+
+                if rs > 2 ** 31 - 1:
+                    rs = reg[rs] - 2 ** 32
+
+                if rd != 0:
+                    reg[rd] = format(rs + rt, '08x')
 
         if (line[0:3] == "lui"):  # LUI
             line = line.replace("lui", "")
@@ -134,8 +151,18 @@ def main():
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
 
-        if (line[0:3] == "xor"):   # XOR
-            print(' xor not ready')
+        if (line[0:3] == "xor"):  # XOR
+            line = line.replace("xor", "")
+            line = line.split(",")
+            rd = int(line[0], 10)
+            rs = int(line[1], 10)
+            rt = int(line[2], 10)
+            rs = int(reg[rs], 16)
+            rt = int(reg[rt], 16)
+            ##print(reg[rs])
+            if rd != 0:
+                reg[rd] = format(rs ^ rt, '08x')
+            # print(reg[rd], "xor")
 
         if (line[0:3] == "and"):    #AND
             line = line.replace("and", "")
@@ -150,12 +177,7 @@ def main():
                 reg[rd] = format(rs & rt, '08x')
             print(reg[rd])
 
-        if (line[0:3] == "add"):  #ADD
-            print('add not ready')
 
-        if (line[0:4] == "andi"):  #ANDI
-
-            print('andi not ready')
 
         if line[0:3] == "beq":  # BEQ
             line = line.replace("beq", "")
@@ -170,36 +192,33 @@ def main():
             rs = int(reg[rs], 16)
             rt = int(reg[rt], 16)
             if rs == rt:
-                location = offset
+                for i in range(len(labelName)):
+                    if labelName[i] == line[2]:
+                        labellocation = labelIndex[i]
+
+                location = labellocation
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
 
 
 
         if line[0:3] == "bne":  # BNE
-            line = line.replace("beq", "")
+            line = line.replace("bne", "")
             line = line.split(",")
-            for i in range(len(labelName)):
-                if labelName[i] == line[2]:
-                    labellocation = labelIndex[i]
-
-            offset = labellocation - location + 1
             rt = int(line[1])
             rs = int(line[0])
             rs = int(reg[rs], 16)
             rt = int(reg[rt], 16)
+            print(rs, rt)
             if rs != rt:
-                location = offset
+                for i in range(len(labelName)):
+                    if labelName[i] == line[2]:
+                        labellocation = labelIndex[i]
+
+                location = labellocation
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
-
-        if (line[0:4] == "sltu"):  # SLTU
-            line = line.replace("sltu", "")
-            line = line.split(",")
-            rd = format(int(line[2]), '05b')
-            rt = format(int(line[1]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('000000') + str(rs) + str(rt) + str(rd) + str('00000101011') + '\n')
+            print('bne')
 
 
         if (line[0:2] == "sh"): #SH
@@ -207,11 +226,33 @@ def main():
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
-            line2 = int(line[1]) if(int(line[1]) > 0) else (int(line[1])*-1)^65534 + 1
-            imm = format(line2, '016b')
-            rt = format(int(line[2]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('101011') + str(rs) + str(rt) + str(imm) + '\n')
+            if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
+                line[1] = line[1].replace("0x", "")
+                imm = int(line[1], 16)
+            else:
+                imm = int(line[1], 10)
+            rt = int(line[0])
+            rs = int(line[2])
+            rt = int(reg[rt], 16)
+            rs = int(reg[rs], 16)
+
+            print(rs, imm)
+            address = rs + imm - 8192
+            print(address)
+            index = address // 4
+            remain = address % 4
+
+            print(remain)
+            if remain == 0 or remain == 2:
+                print(format(rt, '08x'))
+                byte1 = rt & 255
+                rt = rt >> 8
+                byte2 = rt & 255
+                memory[index][remain] = format(byte2, '02x')
+                memory[index][remain + 1] = format(byte1, '02x')
+                print(memory[index])
+
+
 
 
         if (line[0:3] == "lbu"):  # LW
@@ -219,54 +260,123 @@ def main():
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
-            line2 = int(line[1]) if(int(line[1]) > 0) else (int(line[1])*-1)^65534 + 1
-            imm = format(line2, '016b')
-            rt = format(int(line[2]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('100011') + str(rs) + str(rt) + str(imm) + '\n')
+            if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
+                line[1] = line[1].replace("0x", "")
+                imm = int(line[1], 16)
+            else:
+                imm = int(line[1], 10)
+            rt = int(line[0])
+            rs = int(line[2])
+            rs = int(reg[rs], 16)
+
+            print(rs, imm)
+            address = rs + imm - 8192
+            print(address)
+            index = address // 4
+            remain = address % 4
+            reg[rt] = '000000' + memory[index][remain]
+            print(reg[rt])
+
 
         if (line[0:2] == "sb"):  # SB
             line = line.replace("sb", "")
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
-            line2 = int(line[1]) if(int(line[1]) > 0) else (int(line[1])*-1)^65534 + 1
-            imm = format(line2, '016b')
-            rt = format(int(line[2]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('101000') + str(rs) + str(rt) + str(imm) + '\n')
+            if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
+                line[1] = line[1].replace("0x", "")
+                imm = int(line[1], 16)
+            else:
+                imm = int(line[1], 10)
+            rt = int(line[0])
+            rs = int(line[2])
+            rt = int(reg[rt], 16)
+            rs = int(reg[rs], 16)
+
+            print(rs, imm)
+            address = rs + imm - 8192
+            print(address)
+            index = address // 4
+            remain = address % 4
+
+            print(remain)
+
+            print(format(rt, '08x'))
+            byte1 = rt & 255
+            memory[index][remain] = format(byte1, '02x')
+            print('what did this do')
+            print(memory[index])
 
         if (line[0:2] == "lb"):  # LB
             line = line.replace("lb", "")
             line = line.replace("(", ",")
             line = line.replace(")", "")
             line = line.split(",")
-            line2 = int(line[1]) if(int(line[1]) > 0) else (int(line[1])*-1)^65534 + 1
-            imm = format(line2, '016b')
-            rt = format(int(line[2]), '05b')
-            rs = format(int(line[0]), '05b')
-            f.write(str('100000') + str(rs) + str(rt) + str(imm) + '\n')
+            if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
+                line[1] = line[1].replace("0x", "")
+                imm = int(line[1], 16)
+            else:
+                imm = int(line[1], 10)
+            rt = int(line[0])
+            rs = int(line[2])
+            rs = int(reg[rs], 16)
+            memory[index][remain] = '7f'
+            print(rs, imm)
+            address = rs + imm - 8192
+            print(address)
+            index = address // 4
+            remain = address % 4
+            mem = int(memory[index][remain], 16)
 
-        if (line[0:3] == "srl"):  # SRL
-            line = line.replace("srl", "")
-            line = line.split(",")
-            sh = format(int(line[2]), '05b')
-            rt = format(int(line[1]), '05b')
-            rd = format(int(line[0]), '05b')
-            f.write(str('00000000000') + str(rt) + str(rd) + str(sh) + str('000010') + '\n')
+            if mem > 2 ** 7 - 1:
+                reg[rt] = 'ffffff' + format(mem, '02x')
+            else:
+                reg[rt] = format(mem, '08x')
+            print(reg[rt])
 
-        if (line[0:5] == "multu"):  # MULTU
-            line = line.replace("multu", "")
-            line = line.split(",")
-            rs = format(int(line[1]), '05b')
-            rt = format(int(line[0]), '05b')
-            f.write(str('000000') + str(rs) + str(rt) + str('0000000000011001') + '\n')
+            if (line[0:4] == "sltu"):  # SLTU
+                line = line.replace("sltu", "")
+                line = line.split(",")
+                rd = int(line[0], 10)
+                rs = int(line[1], 10)
+                rt = int(line[2], 10)
+                rs = int(reg[rs], 16)
+                rt = int(reg[rt], 16)
+                # print(reg[rs])
 
+                if rs < rt:
+                    reg[rd] = '1'
+                else:
+                    reg[rd] = '0'
+            if (line[0:5] == "multu"):  # MULTU
+                line = line.replace("multu", "")
+                line = line.split(",")
+                rs = int(line[0], 10)
+                rt = int(line[1], 10)
+                rs = int(reg[rs], 16)
+                rt = int(reg[rt], 16)
 
+                if rs > 2 ** 31 - 1:
+                    rs = reg[rs] - 2 ** 32
 
+                if lo != 0:
+                    reg[lo] = format(reg[rs] * reg[rt], '08x')
+                # print(reg[lo], "multu")
+            if (line[0:4] == "mflo"):  # MFLO
+                line = line.replace("mflo", "")
+                line = line.split(",")
+                rd = int(line[0], 10)
 
+                if rd != 0:
+                    reg[rd] = format(reg[lo], '08x')
 
+            if (line[0:4] == "mfhi"):  # MFHI
+                line = line.replace("mfhi", "")
+                line = line.split(",")
+                rd = int(line[0], 10)
 
+                if rd != 0:
+                    reg[rd] = format(reg[hi], '08x')
 
 
 
