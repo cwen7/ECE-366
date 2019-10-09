@@ -362,6 +362,7 @@ def main():
                 if lo != 0:
                     reg[lo] = format(reg[rs] * reg[rt], '08x')
                 # print(reg[lo], "multu")
+
             if (line[0:4] == "mflo"):  # MFLO
                 line = line.replace("mflo", "")
                 line = line.split(",")
