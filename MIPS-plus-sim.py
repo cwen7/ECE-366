@@ -178,6 +178,7 @@ def main():
                 imm = int(line[2], 10)
             rs = int(line[1])
             rt = int(line[0])
+            print(reg[rs], rs)
             rs = int(reg[rs], 16)
 
             if rs > 2 ** 31 - 1:
@@ -364,6 +365,18 @@ def main():
             #print(reg[rd], "sltu")
             DIC = DIC + 1
             #print(int(DIC), "DIC")
+        if(line[0:3] == "srl"): #SRL
+            line = line.replace("srl", "")
+            line = line.split(",")
+            if line[2][0:2] == "0x" or line[2][0:3] == "-0x":
+                line[2] = line[2].replace("0x", "")
+                imm = int(line[2], 16)
+            else:
+                imm = int(line[1], 10)
+            rd = int(line[0], 10)
+            rt = int(line[1], 10)
+            rt = int(reg[rt], 16)
+            reg[rd] = format(rt >> imm, '08x')
 
         if (line[0:5] == "multu"):  # MULTU
             #print('multu')
@@ -463,21 +476,27 @@ def main():
             line = asm[location]
             line = ''.join(str(e) for e in line)
 
-    f.close()
-
+    reg[pc] = format(location * 4, '08x')
+    g = 0
     for i in range(64):
+        f.write(memory[i][4] + ' ' + memory[i][3] + memory[i][2] + memory[i][1] + memory[i][0] + ' ') if (g != 9) else f.write(memory[i][4] + ' ' + memory[i][3] + memory[i][2] + memory[i][1] + memory[i][0] + '\n')
         g = g + 1
-        f.write(memory[i][4] + ' ' + memory[i][0] + memory[i][1] + memory[i][2] + memory[i][3]) if (g == 8) else print(memory[i][4] + ' ' + memory[i][0] + memory[i][1] + memory[i][2] + memory[i][3] + '\n')
+
         if g == 8:
+            f.write('\n')
             g = 0
+    f.write('\n')
     for i in range(27):
+        t = format(i)
         if (i == 0 or 7 < i < 24):
-            f.write(' $' + reg[i] + '\n')
+            f.write('$' + t + ' ' + reg[i] + '\n')
         if (i == 25 ):
-            f.write('lo' + reg[i] + '\n')
+            f.write('lo' + '  ' + reg[i] + '\n')
         if (i == 25):
-            f.write('hi' + reg[i] + '\n')
+            f.write('hi' + '  ' + reg[i] + '\n')
         if (i == 25 ):
-            f.write('pc' + reg[i] + '\n')
+            f.write('pc' + '  ' + reg[i] + '\n')
+    f.close()
+    print(DIC)
 if __name__ == "__main__":
     main()
