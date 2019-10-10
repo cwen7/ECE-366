@@ -1,16 +1,43 @@
-addi $22, $22, 1
-lui $8, 0xFA19
-lui $8, 0xFA19
-ori $8, $8, 0xE366
-sh $8, 0x2002($17)
-sb $8, 0x2005($17)
-skip: and $15, $14, $12
-loop:addi $8, $0, 2000
-lbu $22, 0x2005($0)
-lb $22, 0x2005($0)
+addi $8, $0, 0x2000
+addi $10, $0, 1
+addi $15,$0, 256
+addi $16, $0, 1
+addi $17, $0, 5
+addi $18, $0, 0
+addi $19, $0, 4
+loop1:sb   $10, 0($8)
+addi $8 , $8, 1
+addi $10, $10, 1
 
-addi $10, $0, 9
-addi $11, $0, 10
-multu $10, $11
-mflo $12
-mfhi $13
+bne  $10, $15, loop1
+addi $10,$10 , -1
+sb   $10, 0($8)
+
+load:addi $8, $0, 0x2000
+addi $10, $0, 256
+add  $12, $0, $0
+
+loop2:  lb   $11, 0($8)
+addi  $9, $0, 0
+addi $14, $0, 8
+
+loop3:andi $13, $11, 0x01
+bne  $13, $16, skip1
+
+addi $9, $9, 1
+beq  $9, $17, skip2
+
+skip1:srl $11, $11, 1
+addi $14, $14, -1
+bne $14 , $18, loop3
+
+bne  $9, $19, skip2
+addi $12, $12, 1
+
+skip2:addi $10, $10, -1
+addi $8, $8, 1
+bne  $10, $18, loop2
+
+
+
+

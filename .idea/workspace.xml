@@ -36,7 +36,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.MIPS-plus-sim">
+  <component name="RunManager" selected="Python.MIPS-plu-sim">
     <configuration name="MIPS-plu-sim" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ECE-366" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -81,8 +81,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.MIPS-plus-sim" />
         <item itemvalue="Python.MIPS-plu-sim" />
+        <item itemvalue="Python.MIPS-plus-sim" />
       </list>
     </recent_temporary>
   </component>
