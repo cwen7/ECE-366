@@ -8,4 +8,9 @@ skip: and $15, $14, $12
 loop:addi $8, $0, 2000
 lbu $22, 0x2005($0)
 lb $22, 0x2005($0)
-multu
+
+addi $10, $0, 9
+addi $11, $0, 10
+multu $10, $11
+mflo $12
+mfhi $13

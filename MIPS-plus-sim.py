@@ -99,7 +99,8 @@ def main():
                 print(reg[rt])
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
             if (line[0:3] == "add"):  # ADD
                 line = line.replace("add", "")
@@ -115,7 +116,8 @@ def main():
 
                 if rd != 0:
                     reg[rd] = format(rs + rt, '08x')
-
+                DIC = DIC + 1
+                #print(int(DIC), "DIC")
 
         if (line[0:3] == "lui"):  # LUI
             line = line.replace("lui", "")
@@ -129,7 +131,9 @@ def main():
             if rt != 0:
                 reg[rt] = format(imm*(16**4), '08x')
             print(reg[rt])
-            run = run + 1
+
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
         if (line[0:3] == "ori"):  #ORI
             line = line.replace("ori", "")
@@ -153,7 +157,8 @@ def main():
                     reg[rt] = reg[rt] + 2**32
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
         if (line[0:3] == "xor"):  # XOR
             line = line.replace("xor", "")
@@ -167,7 +172,8 @@ def main():
             if rd != 0:
                 reg[rd] = format(rs ^ rt, '08x')
             # print(reg[rd], "xor")
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
         if (line[0:3] == "and"):    #AND
             line = line.replace("and", "")
@@ -181,7 +187,8 @@ def main():
             if rd != 0:
                 reg[rd] = format(rs & rt, '08x')
             print(reg[rd])
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
 
         if line[0:3] == "beq":  # BEQ
@@ -205,7 +212,8 @@ def main():
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
 
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
 
         if line[0:3] == "bne":  # BNE
@@ -225,7 +233,8 @@ def main():
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
             print('bne')
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
         if (line[0:2] == "sh"): #SH
             line = line.replace("sh", "")
@@ -258,7 +267,8 @@ def main():
                 memory[index][remain + 1] = format(byte1, '02x')
                 print(memory[index])
 
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
 
         if (line[0:3] == "lbu"):  # LW
@@ -283,7 +293,8 @@ def main():
             reg[rt] = '000000' + memory[index][remain]
             print(reg[rt])
 
-            run = run + 1
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
 
 
@@ -295,7 +306,7 @@ def main():
             if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
                 line[1] = line[1].replace("0x", "")
                 imm = int(line[1], 16)
-                reg[rt] = 'ffe3'
+                #reg[rt] = 'ffe3'
             else:
                 imm = int(line[1], 10)
             rt = int(line[0])
@@ -316,6 +327,8 @@ def main():
             memory[index][remain] = format(byte1, '02x')
             print('what did this do')
             print(memory[index])
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
         if (line[0:2] == "lb"):  # LB
             line = line.replace("lb", "")
@@ -343,6 +356,8 @@ def main():
             else:
                 reg[rt] = format(mem, '08x')
             print(reg[rt])
+            DIC = DIC + 1
+            #print(int(DIC), "DIC")
 
             if (line[0:4] == "sltu"):  # SLTU
                 line = line.replace("sltu", "")
@@ -358,6 +373,9 @@ def main():
                     reg[rd] = '1'
                 else:
                     reg[rd] = '0'
+                print(reg[rd], "sltu")
+                DIC = DIC + 1
+                #print(int(DIC), "DIC")
 
             if (line[0:5] == "multu"):  # MULTU
                 line = line.replace("multu", "")
@@ -384,7 +402,9 @@ def main():
                     reg[hi] = format(byte2, '08x')
                     reg[hi] = rs * rt
 
-                # print(reg[lo], "multu")
+                print(reg[rt], "multu")
+                DIC = DIC + 1
+                #print(int(DIC), "DIC")
 
             if (line[0:4] == "mflo"):  # MFLO
                 line = line.replace("mflo", "")
@@ -393,6 +413,9 @@ def main():
 
                 if rd != 0:
                     reg[rd] = reg[lo]
+                print(reg[rd], "mflo")
+                DIC = DIC + 1
+                #print(int(DIC), "DIC")
 
             if (line[0:4] == "mfhi"):  # MFHI
                 line = line.replace("mfhi", "")
@@ -401,6 +424,9 @@ def main():
 
                 if rd != 0:
                     reg[rd] = reg[hi]
+                print(reg[rd], "mfhi")
+                DIC = DIC + 1
+                #print(int(DIC), "DIC")
 
 
         if location != len(asm):
