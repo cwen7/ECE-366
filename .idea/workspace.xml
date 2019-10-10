@@ -4,7 +4,6 @@
     <list default="true" id="8c2bfb01-baa9-4332-ab3a-507fd606de0a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MIPS-plus-sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/MIPS-plus-sim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testtcase.asm" beforeDir="false" afterPath="$PROJECT_DIR$/testtcase.asm" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,7 +35,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.MIPS-plu-sim">
+  <component name="RunManager" selected="Python.MIPS-plus-sim">
     <configuration name="MIPS-plu-sim" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ECE-366" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -44,12 +43,12 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/PycharmProjects/ECE 366 Project 2/venv/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\Arturo\Documents\GitHub\ECE-366\MIPS-plus-sim.py" />
+      <option name="SCRIPT_NAME" value="C:$PROJECT_DIR$/../../../../Arturo/Documents/GitHub/ECE-366/MIPS-plus-sim.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -81,8 +80,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.MIPS-plu-sim" />
         <item itemvalue="Python.MIPS-plus-sim" />
+        <item itemvalue="Python.MIPS-plu-sim" />
       </list>
     </recent_temporary>
   </component>

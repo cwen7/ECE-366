@@ -167,6 +167,31 @@ def main():
             DIC = DIC + 1
             #print(int(DIC), "DIC")
 
+        if (line[0:4] == "andi"):  # ANDI
+            line = line.replace("andi", "")
+            line = line.split(",")
+
+            if line[2][0:2] == "0x" or line[2][0:3] == "-0x":
+                line[2] = line[2].replace("0x", "")
+                imm = int(line[2], 16)
+            else:
+                imm = int(line[2], 10)
+            rs = int(line[1])
+            rt = int(line[0])
+            rs = int(reg[rs], 16)
+
+            if rs > 2 ** 31 - 1:
+                rs = rs - 2 ** 32
+
+            if rt != 0:
+                reg[rt] = rs & imm
+                if reg[rt] < 0:
+                    reg[rt] = reg[rt] + 2 ** 32
+                reg[rt] = format(reg[rt], '08x')
+            # print(reg[rt])
+            DIC = DIC + 1
+            # print(int(DIC), "DIC")
+
         if (line[0:3] == "xor"):  # XOR
             line = line.replace("xor", "")
             line = line.split(",")
