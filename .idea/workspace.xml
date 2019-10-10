@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8c2bfb01-baa9-4332-ab3a-507fd606de0a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test2.asm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Hash-MIPS-plus.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hash-MIPS-defult.asm" beforeDir="false" afterPath="$PROJECT_DIR$/Hash-MIPS-defult.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MIPS-plus-sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/MIPS-plus-sim.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mc.txt" beforeDir="false" afterPath="$PROJECT_DIR$/mc.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testtcase.asm" beforeDir="false" afterPath="$PROJECT_DIR$/testcase.asm" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -19,7 +19,7 @@ def main():
     labelIndex = []
     labelName = []
     f = open("mc.txt", "w+")
-    h = open("Hash-MIPS-defult.asm", "r")
+    h = open("Hash-MIPS-plus.asm", "r")
     asm = h.readlines()
     for item in range(asm.count('\n')):  # Remove all empty lines '\n'
         asm.remove('\n')
@@ -72,6 +72,15 @@ def main():
 
 
 
+        if(line[0:4] == "fold"): #FOLD
+            line = line.replace("fold", "")
+            line = line.split(",")
+
+            if line[2][0:2] == "0x" or line[2][0:3] == "-0x":
+                line[2] = line[2].replace("0x", "")
+                imm = int(line[2], 16)
+            else:
+                imm = int(line[2], 10)
 
 
 
@@ -159,7 +168,7 @@ def main():
                 rs = rs - 2**32
 
             if rt != 0:
-                reg[rt] = rs ^ imm
+                reg[rt] = rs | imm
                 if reg[rt] < 0:
                     reg[rt] = reg[rt] + 2**32
                 reg[rt] = format(reg[rt], '08x')
@@ -178,7 +187,7 @@ def main():
                 imm = int(line[2], 10)
             rs = int(line[1])
             rt = int(line[0])
-            print(reg[rs], rs)
+            #print(reg[rs], rs)
             rs = int(reg[rs], 16)
 
             if rs > 2 ** 31 - 1:
@@ -207,7 +216,7 @@ def main():
             # print(reg[rd], "xor")
             DIC = DIC + 1
             #print(int(DIC), "DIC")
-            print(reg[12])
+            #print(reg[12], reg[15], "xor")
 
 
         if (line[0:3] == "and"):    #AND
@@ -224,6 +233,8 @@ def main():
             #print(reg[rd])
             DIC = DIC + 1
             #print(int(DIC), "DIC")
+            #if(rd == 15):
+                #print(reg[rd], "and")
 
 
         if (line[0:2] == "sh"): #SH
@@ -257,8 +268,8 @@ def main():
 
             DIC = DIC + 1
             #print(int(DIC), "DIC")
-            if index > 7:
-                print(memory[index][remain + 1], memory[index][remain], memory[index][4], "sh")
+            #if index > 7:
+                #print(memory[index][remain + 1], memory[index][remain], memory[index][4], "sh")
 
 
         if (line[0:3] == "lbu"):  # LW
@@ -381,6 +392,8 @@ def main():
             reg[rd] = format(rt >> imm, '08x')
 
             #print(reg[rd], "srl")
+            if(rd == 12):
+                print(reg[rd])
 
 
         if (line[0:5] == "multu"):  # MULTU
@@ -503,6 +516,6 @@ def main():
         if (i == 26 ):
             f.write('pc' + '  ' + reg[i] + '\n')
     f.close()
-    #print(DIC)
+    print(DIC)
 if __name__ == "__main__":
     main()
