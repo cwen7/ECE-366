@@ -9,27 +9,27 @@ ori $23, $23, 0x1F
 
 loop:multu $9, $8
 mfhi $11
-mflo $10 
+mflo $10
 xor $12, $11, $10
 
 multu $12, $8
 mfhi $11
-mflo $10 
+mflo $10
 xor $12, $11, $10
 
 multu $12, $8
 mfhi $11
-mflo $10 
+mflo $10
 xor $12, $11, $10
 
 multu $12, $8
 mfhi $11
-mflo $10 
+mflo $10
 xor $12, $11, $10
 
 multu $12, $8
 mfhi $11
-mflo $10 
+mflo $10
 xor $12, $11, $10
 
 ori $13, $13, 0xFFFF
@@ -43,11 +43,12 @@ xor $12, $15, $12
 
 and $15, $14, $12
 srl $12, $12, 8
-xor $12, $15, $12  
+xor $12, $15, $12
 
 
 
 sh $12, 0($17)
+
 
 ori $21, $12, 0
 

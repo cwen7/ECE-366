@@ -19,7 +19,7 @@ def main():
     labelIndex = []
     labelName = []
     f = open("mc.txt", "w+")
-    h = open("testtcase.asm", "r")
+    h = open("Hash-MIPS-defult.asm", "r")
     asm = h.readlines()
     for item in range(asm.count('\n')):  # Remove all empty lines '\n'
         asm.remove('\n')
@@ -67,7 +67,7 @@ def main():
         line = line.replace("$", "")
         line = line.replace(" ", "")
         line = line.replace("zero", "0")  # assembly can also use both $zero and $0
-        print(line)
+        #print(line)
         #print(j, line)
 
 
@@ -99,7 +99,7 @@ def main():
                     reg[rt] = reg[rt] + 2**32
                 #print(reg[rt])
                 reg[rt] = format(reg[rt], '08x')
-            print(reg[rt], 'index', rt)
+            #print(reg[rt], 'index', rt)
             DIC = DIC + 1
             #print(int(DIC), "DIC")
 
@@ -207,6 +207,7 @@ def main():
             # print(reg[rd], "xor")
             DIC = DIC + 1
             #print(int(DIC), "DIC")
+            print(reg[12])
 
 
         if (line[0:3] == "and"):    #AND
@@ -245,19 +246,19 @@ def main():
             ##print(address)
             index = address // 4
             remain = address % 4
-
-            ##print(remain)
             if remain == 0 or remain == 2:
                 ##print(format(rt, '08x'))
-                byte1 = rt & 255
-                rt = rt >> 8
                 byte2 = rt & 255
+                rt = rt >> 8
+                byte1 = rt & 255
                 memory[index][remain] = format(byte2, '02x')
                 memory[index][remain + 1] = format(byte1, '02x')
                 ##print(memory[index])
 
             DIC = DIC + 1
             #print(int(DIC), "DIC")
+            if index > 7:
+                print(memory[index][remain + 1], memory[index][remain], memory[index][4], "sh")
 
 
         if (line[0:3] == "lbu"):  # LW
@@ -298,7 +299,7 @@ def main():
                 #reg[rt] = 'ffe3'
             else:
                 imm = int(line[1], 10)
-            print(line[0])
+            #print(line[0])
             rt = int(line[0])
             rs = int(line[2])
             rt = int(reg[rt], 16)
@@ -372,11 +373,15 @@ def main():
                 line[2] = line[2].replace("0x", "")
                 imm = int(line[2], 16)
             else:
-                imm = int(line[1], 10)
+                imm = int(line[2], 10)
             rd = int(line[0], 10)
             rt = int(line[1], 10)
             rt = int(reg[rt], 16)
+            #(imm)
             reg[rd] = format(rt >> imm, '08x')
+
+            #print(reg[rd], "srl")
+
 
         if (line[0:5] == "multu"):  # MULTU
             #print('multu')
@@ -457,7 +462,7 @@ def main():
             rt = int(line[1])
             rs = int(line[0])
             rs = int(reg[rs], 16)
-            print(rt)
+            #print(rt)
             rt = int(reg[rt], 16)
 
             #print(rs, rt)
@@ -475,8 +480,9 @@ def main():
         if location != len(asm):
             line = asm[location]
             line = ''.join(str(e) for e in line)
-
+    #print(location)
     reg[pc] = format(location * 4, '08x')
+    #print(reg[pc])
     g = 0
     for i in range(64):
         f.write(memory[i][4] + ' ' + memory[i][3] + memory[i][2] + memory[i][1] + memory[i][0] + ' ') if (g != 9) else f.write(memory[i][4] + ' ' + memory[i][3] + memory[i][2] + memory[i][1] + memory[i][0] + '\n')
@@ -490,13 +496,13 @@ def main():
         t = format(i)
         if (i == 0 or 7 < i < 24):
             f.write('$' + t + ' ' + reg[i] + '\n')
-        if (i == 25 ):
+        if (i == 24 ):
             f.write('lo' + '  ' + reg[i] + '\n')
         if (i == 25):
             f.write('hi' + '  ' + reg[i] + '\n')
-        if (i == 25 ):
+        if (i == 26 ):
             f.write('pc' + '  ' + reg[i] + '\n')
     f.close()
-    print(DIC)
+    #print(DIC)
 if __name__ == "__main__":
     main()
