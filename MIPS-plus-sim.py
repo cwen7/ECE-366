@@ -15,6 +15,7 @@ def saveJumpLabel(asm, labelIndex, labelName):
         asm.remove('\n')
 
 def main():
+    DIC = 0
     labelIndex = []
     labelName = []
     f = open("mc.txt", "w+")
@@ -98,8 +99,8 @@ def main():
                 print(reg[rt])
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
+            run = run + 1
 
-        if (line[0:3] == "add"):  # ADD
             if (line[0:3] == "add"):  # ADD
                 line = line.replace("add", "")
                 line = line.split(",")
@@ -115,6 +116,7 @@ def main():
                 if rd != 0:
                     reg[rd] = format(rs + rt, '08x')
 
+
         if (line[0:3] == "lui"):  # LUI
             line = line.replace("lui", "")
             line = line.split(",")
@@ -127,6 +129,7 @@ def main():
             if rt != 0:
                 reg[rt] = format(imm*(16**4), '08x')
             print(reg[rt])
+            run = run + 1
 
         if (line[0:3] == "ori"):  #ORI
             line = line.replace("ori", "")
@@ -150,6 +153,7 @@ def main():
                     reg[rt] = reg[rt] + 2**32
                 reg[rt] = format(reg[rt], '08x')
             print(reg[rt])
+            run = run + 1
 
         if (line[0:3] == "xor"):  # XOR
             line = line.replace("xor", "")
@@ -163,6 +167,7 @@ def main():
             if rd != 0:
                 reg[rd] = format(rs ^ rt, '08x')
             # print(reg[rd], "xor")
+            run = run + 1
 
         if (line[0:3] == "and"):    #AND
             line = line.replace("and", "")
@@ -176,7 +181,7 @@ def main():
             if rd != 0:
                 reg[rd] = format(rs & rt, '08x')
             print(reg[rd])
-
+            run = run + 1
 
 
         if line[0:3] == "beq":  # BEQ
@@ -200,6 +205,7 @@ def main():
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
 
+            run = run + 1
 
 
         if line[0:3] == "bne":  # BNE
@@ -219,7 +225,7 @@ def main():
                 line = asm[location]
                 line = ''.join(str(e) for e in line)
             print('bne')
-
+            run = run + 1
 
         if (line[0:2] == "sh"): #SH
             line = line.replace("sh", "")
@@ -252,7 +258,7 @@ def main():
                 memory[index][remain + 1] = format(byte1, '02x')
                 print(memory[index])
 
-
+            run = run + 1
 
 
         if (line[0:3] == "lbu"):  # LW
@@ -277,6 +283,9 @@ def main():
             reg[rt] = '000000' + memory[index][remain]
             print(reg[rt])
 
+            run = run + 1
+
+
 
         if (line[0:2] == "sb"):  # SB
             line = line.replace("sb", "")
@@ -286,6 +295,7 @@ def main():
             if line[1][0:2] == "0x" or line[1][0:3] == "-0x":
                 line[1] = line[1].replace("0x", "")
                 imm = int(line[1], 16)
+                reg[rt] = 'ffe3'
             else:
                 imm = int(line[1], 10)
             rt = int(line[0])
@@ -348,6 +358,7 @@ def main():
                     reg[rd] = '1'
                 else:
                     reg[rd] = '0'
+
             if (line[0:5] == "multu"):  # MULTU
                 line = line.replace("multu", "")
                 line = line.split(",")
@@ -359,8 +370,20 @@ def main():
                 if rs > 2 ** 31 - 1:
                     rs = reg[rs] - 2 ** 32
 
-                if lo != 0:
-                    reg[lo] = format(reg[rs] * reg[rt], '08x')
+                if lo!= 0:
+                    print(format(rt, '08x'))
+                    byte1 = rt & 255
+                    rt = rt >> 32
+                    reg[lo] = format(byte1, '08x')
+                    reg[lo] = rs * rt
+
+                if hi!= 0:
+                    print(format(rt, '08x'))
+                    byte2 = rt & 255
+                    rt = rt >> 32
+                    reg[hi] = format(byte2, '08x')
+                    reg[hi] = rs * rt
+
                 # print(reg[lo], "multu")
 
             if (line[0:4] == "mflo"):  # MFLO
@@ -369,7 +392,7 @@ def main():
                 rd = int(line[0], 10)
 
                 if rd != 0:
-                    reg[rd] = format(reg[lo], '08x')
+                    reg[rd] = reg[lo]
 
             if (line[0:4] == "mfhi"):  # MFHI
                 line = line.replace("mfhi", "")
@@ -377,11 +400,7 @@ def main():
                 rd = int(line[0], 10)
 
                 if rd != 0:
-                    reg[rd] = format(reg[hi], '08x')
-
-
-
-
+                    reg[rd] = reg[hi]
 
 
         if location != len(asm):
